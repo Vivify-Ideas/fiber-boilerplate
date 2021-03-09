@@ -1,0 +1,33 @@
+version: '3'
+services:
+  go-docker-boilerplate:
+    build: .
+    depends_on: 
+      - db
+    # used for development
+    command: ["air"]
+    volumes:
+      - .:/go/src/app
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:12.6
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025
+
+volumes:
+  db-data:
